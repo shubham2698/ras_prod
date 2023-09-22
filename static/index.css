@@ -1,0 +1,49 @@
+html {
+	scroll-behavior: smooth;
+}
+
+.background {
+    background-color:#2c3338;
+    height: 100vh;
+}
+
+.login_form{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    width: 50%;
+}
+
+.form-label{
+    color: #ea4c88;
+    user-select: none;
+}
+
+.btn-primary{
+    background-color: #ea4c88 !important;
+    border: none !important;
+}
+
+.form-control{
+    margin-bottom: 10px;
+}
+
+.signin_text{
+    color: white;
+    user-select: none;
+}
+
+.ras-heading{
+    margin-top: 20px;
+    margin-left: 20px;
+    color: white;
+    user-select: none;
+    font-size: 50px;
+}
+
+.ras-subheading{
+    margin-left: 34px;
+    color: white;
+    user-select: none;
+}
