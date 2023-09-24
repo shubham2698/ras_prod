@@ -12,13 +12,14 @@ html {
     margin-left: 20px;
     color: white;
     user-select: none;
-    font-size: 50px;
+    font-size: 70px;
 }
 
 .ras-subheading{
     margin-left: 34px;
     color: white;
     user-select: none;
+    font-size: 20px;
 }
 
 .file-form{
@@ -36,4 +37,11 @@ html {
 
 .btn{
     margin-top: 10px !important;
+}
+
+.iname{
+    margin-left: 34px;
+    color: white;
+    user-select: none;
+    font-size: 20px;
 }
