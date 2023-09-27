@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Get Data</title>
     <link rel="stylesheet" href="../static/getcsv.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
@@ -14,6 +14,11 @@
     <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
           <h2 class="ras-heading">Result Analysis Service</h2>
+          <div class="logout_btn">
+            <form action="/logout">
+                <input class="btn btn-primary" id="logout_button" type="submit" value="Log out">
+            </form>
+        </div>
         </div>
         <p class="iname">Welcome {{session['iname'].replace("_"," ")}}</p>
     </nav>
@@ -21,8 +26,10 @@
         <form method="POST" enctype="multipart/form-data" >
             <label for="formFile" class="form-label">Insert University MCA Result PDF</label>
             <input class="form-control" name="file" type="file" id="formFile">
-            <input class="btn btn-primary" type="submit" value="Download CSV" onclick="showPopup()">
+            <input class="btn btn-primary" type="submit" value="Download CSV">
         </form>
+        
+
     </div>
 </div>
    

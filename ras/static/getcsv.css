@@ -45,3 +45,7 @@ html {
     user-select: none;
     font-size: 20px;
 }
+
+.logout_btn{
+    margin-right: 30px;
+}

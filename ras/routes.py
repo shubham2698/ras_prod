@@ -1,15 +1,9 @@
 from flask import Flask, request , render_template,jsonify,redirect,url_for,session,flash,send_file
-from werkzeug.utils import secure_filename
-from database_functions import *
+from ras.functions.functions import *
 import os, re
-from data_scrape import data_scrape
-
-
-
-app = Flask(__name__)
-UPLOAD_FOLDER = 'PDF'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = 'raspibm'
+from ras.functions.data_scrape import data_scrape
+from werkzeug.utils import secure_filename
+from run import app
 
 @app.route('/', methods=['POST','GET'])
 def login():
@@ -31,23 +25,7 @@ def login():
         except:
             flash('Invalid email/password. Try Again..', category='error')
             return render_template(r"index.html")
-
-
-def is_valid_password(psd,cpsd,phone):
-    phone_pattern = r'^[789]\d{9}$'
-    if psd != cpsd:
-        return False
-    if len(psd) < 8:
-        return False
-    if not re.match(phone_pattern,phone):
-        return False
-    if not (re.search(r'[A-Z]', psd) and
-            re.search(r'[a-z]', psd) and
-            re.search(r'\d', psd) and
-            re.search(r'[!@#$%^&*(),.?":{}|<>]', psd)):
-        return False
-    
-    return True
+        
 
 
 @app.route('/register', methods=['POST','GET'])
@@ -66,15 +44,13 @@ def register():
         sql_insert_query = "INSERT INTO users (email, password, phone_no, institute_name) VALUES (%s, %s, %s, %s)"
         user_data = (email, psd, phone, iname)
         db.execute(sql_insert_query,user_data)
-        flash('User Registed Succesfully.', category='success')
+        connection.commit()
+        flash('User Registered Succesfully.', category='success')
         return render_template(r"signup.html")
     else:
         flash('Invalid Password or Mobile Number. Try Again..', category='error')
         return render_template(r"signup.html")
 
-
-def is_pdf(filename):
-    return filename.lower().endswith('.pdf')
 
 
 @app.route('/logout', methods=['GET','POST'])
@@ -82,6 +58,12 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+
+@app.route('/health',methods=['GET','POST'])
+def healthcheck():
+    return jsonify(
+        status="UP"
+    )
 
 @app.route('/getcsv', methods=['GET','POST'])
 def getcsv():
@@ -103,7 +85,3 @@ def getcsv():
         except Exception as e:
             print(f"An error occurred: {str(e)}")
             return "An error occurred while serving the file", 500
-        
-
-if __name__ == '__main__':
-    app.run(debug=True)
