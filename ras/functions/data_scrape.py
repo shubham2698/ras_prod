@@ -61,4 +61,5 @@ def data_scrape(filename):
 
         except IndexError:
             pass
+        
 
