@@ -2,6 +2,7 @@ from flask import Flask, request , render_template,jsonify,redirect,url_for,sess
 from ras.functions.functions import *
 import os, re
 from ras.functions.data_scrape import data_scrape
+from ras.functions.data_analysis import statastics
 from werkzeug.utils import secure_filename
 from run import app
 
@@ -12,7 +13,7 @@ def login():
     elif request.method == 'POST':
         email = request.form['uname']
         psd = request.form['psd']
-        db,connection=connect_database("RAS")
+        db,connection=connect_database(app.config['USER_DATABASE'])
         try:
             db.execute(f"SELECT password,institute_name FROM users WHERE email = '{email}' ")
             result = db.fetchall()
@@ -21,10 +22,10 @@ def login():
                 return redirect(url_for('getcsv'))
             else:
                 flash('Invalid password. Try Again..', category='error')
-                return render_template(r"index.html")
+                return render_template(r"index.html"),401
         except:
             flash('Invalid email/password. Try Again..', category='error')
-            return render_template(r"index.html")
+            return render_template(r"index.html"),401
         
 
 
@@ -40,7 +41,7 @@ def register():
         iname = request.form['iname']
 
     if is_valid_password(psd,cpsd,phone):
-        db,connection=connect_database("RAS")
+        db,connection=connect_database(app.config['USER_DATABASE'])
         sql_insert_query = "INSERT INTO users (email, password, phone_no, institute_name) VALUES (%s, %s, %s, %s)"
         user_data = (email, psd, phone, iname)
         db.execute(sql_insert_query,user_data)
@@ -77,9 +78,12 @@ def getcsv():
         filename = secure_filename(f.filename)
         if not is_pdf(filename):
             return jsonify({"message": "File is not a PDF", "status_code": 400})
+        filename = f"{session['iname']}_{filename}"
         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
         data_scrape(filename)
-        response = send_file(f"TEMP/{filename[:-4]}.csv", as_attachment=True)
+        statastics(filename)
+        zip_csv_files(app.config['CSV_DIRECTORY'],"data")
+        response = send_file(os.path.join("../","data"), as_attachment=True)
         try:
             return response
         except Exception as e:

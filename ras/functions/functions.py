@@ -2,7 +2,7 @@ import pymysql
 import re
 import zipfile
 import os
-
+from run import app
 
 def zip_csv_files(csv_directory, zip_filename):
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
@@ -14,7 +14,7 @@ def zip_csv_files(csv_directory, zip_filename):
 
 def connection_mysql_server():
     try:
-        connection1 = pymysql.connect(host="localhost", user="root", passwd="")
+        connection1 = pymysql.connect(host=app.config['DB_HOST'], user=app.config['DB_USER'], passwd=app.config['DB_PASSWORD'])
         mysql_server_connection = connection1.cursor()
         return mysql_server_connection
     except:
@@ -24,7 +24,7 @@ def connection_mysql_server():
 
 def connect_database(dbname):
     try:
-        connection = pymysql.connect(host="localhost", user="root", passwd="", database=f"{dbname}")
+        connection = pymysql.connect(host=app.config['DB_HOST'], user=app.config['DB_USER'], passwd=app.config['DB_PASSWORD'], database=f"{dbname}")
         db = connection.cursor()
         return db,connection
     except:
@@ -51,8 +51,6 @@ def is_valid_password(psd,cpsd,phone):
 
 
 
-
-
-
 def is_pdf(filename):
     return filename.lower().endswith('.pdf')
+

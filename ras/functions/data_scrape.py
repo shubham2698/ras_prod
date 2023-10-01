@@ -1,19 +1,20 @@
 import fitz  # PyMuPDF library
-
+from run import app
 
 def data_scrape(filename):
     try:
-        pdf_document = fitz.open(f"PDF/{filename}")
+        pdf_document = fitz.open(f"{app.config['UPLOAD_FOLDER']}/{filename}")
         extracted_text = ''
         for page_number in range(pdf_document.page_count):
             page = pdf_document.load_page(page_number)
             extracted_text += page.get_text()
     except Exception as e:
-        print("An error occurred:", str(e))
+        print("\033[91mERROR OCCURED WHILE SCRAPING PDF\033[0m")
+        print(e)
 
 
     try:
-        file = open(f"TEMP/{filename[:-4]}.csv", "w")
+        file = open(f"{app.config['CSV_DIRECTORY']}/{filename[:-4]}.csv", "w")
         column_name = "SEAT NO,PRN NO,SEX,MOTHER NAME,SEM,NAME OF STUDENT,SUBJECT CODE,INTERNAL,EXTERNAL,TOTAL,GRADE,GRADE POINT\n"
         file.write(column_name)
     except Exception:
@@ -35,7 +36,7 @@ def data_scrape(filename):
                 mother_name = each_line[52:70].strip()
                 sem = int(each_line[96:99].strip())
                 name = each_line[8:51].strip()
-                print(seat_no, prn_no, sex, mother_name, sem, name)
+                # print(seat_no, prn_no, sex, mother_name, sem, name)
             except ValueError:
                 pass
 
