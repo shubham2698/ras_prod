@@ -82,10 +82,12 @@ def getcsv():
         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
         data_scrape(filename)
         statastics(filename)
-        zip_csv_files(app.config['CSV_DIRECTORY'],"data")
-        response = send_file(os.path.join("../","data"), as_attachment=True)
+        zip_csv_files(app.config['CSV_DIRECTORY'],f"{session['iname']}_data")
+        response = send_file(os.path.join("../",f"{session['iname']}_data"), as_attachment=True)
         try:
             return response
         except Exception as e:
             print(f"An error occurred: {str(e)}")
             return "An error occurred while serving the file", 500
+        finally:
+            remove_files(filename)

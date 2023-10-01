@@ -3,6 +3,8 @@ import re
 import zipfile
 import os
 from run import app
+from flask import session
+
 
 def zip_csv_files(csv_directory, zip_filename):
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
@@ -54,3 +56,20 @@ def is_valid_password(psd,cpsd,phone):
 def is_pdf(filename):
     return filename.lower().endswith('.pdf')
 
+
+
+def remove_files(filename):
+    file_paths = [
+        f"{app.config['UPLOAD_FOLDER']}/{filename}",
+        f"{app.config['CSV_DIRECTORY']}/{filename[:-4]}.csv",
+        f"{app.config['CSV_DIRECTORY']}/{session['iname']}_statistics.xlsx",
+        f"{app.config['CSV_DIRECTORY']}/{session['iname']}_failed_absent_count.xlsx",
+        f"{session['iname']}_data"
+    ]
+
+    for file_path in file_paths:
+        try:
+            os.remove(file_path)
+            print(f"File '{file_path}' deleted successfully.")
+        except OSError as e:
+            print(f"Error: {e.filename} - {e.strerror}")
