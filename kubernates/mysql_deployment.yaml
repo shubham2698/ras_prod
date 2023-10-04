@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: mysql
+  labels: 
+    app: mysql
+    tier: database
+spec:
+  selectors:
+    matchLables:
+      app: mysql
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+        tier: database
+    spec:
+      container:
+        - image: mysql:latest
+          args:
+            - "--ignore-db-dir=lost+found"
+          name: mysql
+          env: 
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: ras-db
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistant-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumesClaim:
+            claimName: mysql-pv-claim
