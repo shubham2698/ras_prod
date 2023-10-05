@@ -50,7 +50,7 @@ def register():
         return render_template(r"signup.html")
     else:
         flash('Invalid Password or Mobile Number. Try Again..', category='error')
-        return render_template(r"signup.html")
+        return render_template(r"signup.html"),200
 
 
 
