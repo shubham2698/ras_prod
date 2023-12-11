@@ -45,6 +45,8 @@ def register():
         sql_insert_query = "INSERT INTO users (email, password, phone_no, institute_name) VALUES (%s, %s, %s, %s)"
         user_data = (email, psd, phone, iname)
         db.execute(sql_insert_query,user_data)
+        create_database_query = f"CREATE DATABASE IF NOT EXISTS {iname.replace(' ','_')}"
+        db.execute(create_database_query)
         connection.commit()
         flash('User Registered Succesfully.', category='success')
         return render_template(r"signup.html")
@@ -81,7 +83,7 @@ def getcsv():
         filename = f"{session['iname']}_{filename}"
         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
         data_scrape(filename)
-        statastics(filename)
+        # statastics(filename)
         zip_csv_files(app.config['CSV_DIRECTORY'],f"{session['iname']}_data")
         response = send_file(os.path.join("../",f"{session['iname']}_data"), as_attachment=True)
         try:
@@ -90,4 +92,4 @@ def getcsv():
             print(f"An error occurred: {str(e)}")
             return "An error occurred while serving the file", 500
         finally:
-            remove_files(filename)
+            pass

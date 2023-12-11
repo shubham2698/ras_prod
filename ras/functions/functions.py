@@ -72,4 +72,4 @@ def remove_files(filename):
             os.remove(file_path)
             print(f"File '{file_path}' deleted successfully.")
         except OSError as e:
-            print(f"Error: {e.filename} - {e.strerror}")
+            print(f"Error: {e.filename} - {e.strerror}")   
